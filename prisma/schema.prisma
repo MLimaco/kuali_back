@@ -17,16 +17,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 // -------------------- MODELOS --------------------
 
 model Company {
   id       Int       @id @default(autoincrement()) // Clave primaria autoincremental
   name     String // Nombre de la empresa
-  ruc      BigInt // RUC (registro único)
+  ruc      BigInt? // RUC (registro único)
   size     String? // Tamaño de la empresa (opcional)
   website  String? // URL del sitio web (opcional)
-  sector   String? // Sector de la empresa (opcional)
-  createAt DateTime? // Fecha de creación del registro
+  sector   String // Sector de la empresa (opcional)
+  createAt DateTime // Fecha de creación del registro
   updateAt DateTime? // Fecha de actualización del registro
   deleteAt DateTime? // Fecha de eliminación lógica (opcional)
 
@@ -54,7 +55,7 @@ model Template {
   subject  String // Asunto del mensaje
   content  String // Contenido del mensaje
   type     String // Tipo (email, llamada, etc.)
-  createAt DateTime? // Fecha de creación
+  createAt DateTime // Fecha de creación
   updateAt DateTime? // Fecha de actualización
   deleteAt DateTime? // Fecha de eliminación lógica (opcional)
 
@@ -67,13 +68,13 @@ model Lead {
   id              Int       @id @default(autoincrement()) // Clave primaria
   firstName       String // Nombre
   lastName        String // Apellido
-  mail            String // Correo
-  phone           String // Teléfono
+  mail            String? // Correo
+  phone           String? // Teléfono
   linkedinProfile String? // Perfil de LinkedIn (opcional)
   rol             String? // Rol en la empresa
   senority        String? // Nivel de antigüedad
   area            String? // Área de trabajo
-  createAt        DateTime? // Fecha de creación
+  createAt        DateTime // Fecha de creación
   updateAt        DateTime? // Fecha de actualización
   deleteAt        DateTime? // Fecha de eliminación lógica
   nextStep        String? // Próximo paso a dar
@@ -96,7 +97,7 @@ model ContactLog {
   status        String // Estado del contacto (realizado, pendiente, etc.)
   notes         String? // Notas adicionales
   scheduleDates DateTime? // Fecha programada para seguimiento
-  createAt      DateTime? // Fecha de creación
+  createAt      DateTime // Fecha de creación
   updateAt      DateTime? // Fecha de modificación
   deleteAt      DateTime? // Eliminación lógica
 
