@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        Int     @id @default(autoincrement())
+  name      String
+  ruc       BigInt
+  size      String?
+  website   String?
+  sector    String?
+  createAt  DateTime?
+  updateAt  DateTime?
+
+  leads     Lead[]
+}
+
+model User {
+  id     Int     @id @default(autoincrement())
+  name   String
+  email  String
+  phone  String?
+
+  leads  Lead[] @relation("LeadOwner")
+}
+
+model Template {
+  id        Int     @id @default(autoincrement())
+  name      String
+  subject   String
+  content   String
+  type      String
+  createAt  DateTime?
+  updateAt  DateTime?
+  deleteAt  DateTime?
+
+  contactLogs ContactLog[]
+}
+
+model Lead {
+  id               Int      @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  mail             String
+  phone            String
+  linkedinProfile  String?
+  rol              String?
+  senority         String?
+  area             String?
+  createAt         DateTime?
+  updateAt         DateTime?
+  deleteAt         DateTime?
+  nextStep         String?
+  status           String?
+
+  companyID        Int
+  ownerID          Int
+
+  company          Company @relation(fields: [companyID], references: [id])
+  owner            User    @relation("LeadOwner", fields: [ownerID], references: [id])
+
+  contactLogs      ContactLog[]
+}
+
+model ContactLog {
+  id           Int      @id @default(autoincrement())
+  type         String
+  status       String
+  notes        String?
+  scheduleDates DateTime?
+  createAt     DateTime?
+  updateAt     DateTime?
+  deleteAt     DateTime?
+
+  leadID       Int
+  templateID   Int?
+
+  lead         Lead     @relation(fields: [leadID], references: [id])
+  template     Template? @relation(fields: [templateID], references: [id])
+}
