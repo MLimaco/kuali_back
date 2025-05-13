@@ -51,11 +51,11 @@ model User {
 
 model Template {
   id       Int       @id @default(autoincrement()) // Clave primaria
-  name     String // Nombre del template
+  name     String // Nombre de a quien va dirigido el mensaje
   subject  String // Asunto del mensaje
-  content  String // Contenido del mensaje
-  type     String // Tipo (email, llamada, etc.)
-  createAt DateTime // Fecha de creación
+  content  String // Contenido del mensaje (SALUDO, DESPEDIDA, FOLLOW UP, PROPUESTA, ETC)
+  type     String // Tipo (CHAT, EMAIL, LLAMADA, MEET, ETC.)
+  createAt DateTime @default(now()) // Fecha de creación
   updateAt DateTime? // Fecha de actualización
   deleteAt DateTime? // Fecha de eliminación lógica (opcional)
 
@@ -74,7 +74,7 @@ model Lead {
   rol             String? // Rol en la empresa
   senority        String? // Nivel de antigüedad
   area            String? // Área de trabajo
-  createAt        DateTime // Fecha de creación
+  createAt        DateTime @default(now()) // Fecha de creación
   updateAt        DateTime? // Fecha de actualización
   deleteAt        DateTime? // Fecha de eliminación lógica
   nextStep        String? // Próximo paso a dar
@@ -93,11 +93,11 @@ model Lead {
 
 model ContactLog {
   id            Int       @id @default(autoincrement()) // Clave primaria
-  type          String // Tipo de contacto (llamada, correo, etc.)
-  status        String // Estado del contacto (realizado, pendiente, etc.)
+  type          String // Tipo de Contacto (CHAT, EMAIL, LLAMADA, MEET, ETC.)
+  status        String // Estado del contacto (SEND, PENDING, ETC.)
   notes         String? // Notas adicionales
   scheduleDates DateTime? // Fecha programada para seguimiento
-  createAt      DateTime // Fecha de creación
+  createAt      DateTime @default(now()) // Fecha de creación
   updateAt      DateTime? // Fecha de modificación
   deleteAt      DateTime? // Eliminación lógica
 
