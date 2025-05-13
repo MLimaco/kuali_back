@@ -23,11 +23,11 @@ datasource db {
 model Company {
   id       Int       @id @default(autoincrement()) // Clave primaria autoincremental
   name     String // Nombre de la empresa
-  ruc      BigInt? // RUC (registro único)
+  ruc      String // RUC (registro único)
   size     String? // Tamaño de la empresa (opcional)
   website  String? // URL del sitio web (opcional)
-  sector   String // Sector de la empresa (opcional)
-  createAt DateTime // Fecha de creación del registro
+  sector   String? // Sector de la empresa (opcional)
+  createAt DateTime @default(now()) // Fecha de creación del registro
   updateAt DateTime? // Fecha de actualización del registro
   deleteAt DateTime? // Fecha de eliminación lógica (opcional)
 
