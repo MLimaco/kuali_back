@@ -14,4 +14,22 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Crear un nuevo usuario
+router.post("/", async (req, res) => {
+    try {
+        const { name, email, phone } = req.body;
+        const user = await prisma.user.create({
+            data: {
+                name,
+                email,
+                phone
+            }
+        });
+        res.status(201).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al crear el usuario" });
+    }
+});
+
 export default router;

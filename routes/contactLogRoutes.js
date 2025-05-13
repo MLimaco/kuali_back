@@ -14,4 +14,38 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.post("/", async (req, res) => {
+    try {
+        const {
+            type,
+            status,
+            notes,
+            scheduleDates,
+            leadID,
+            templateID,
+            companyID,
+            userID
+        } = req.body;
+
+        const contactLog = await prisma.contactLog.create({
+            data: {
+                type,
+                status,
+                notes,
+                scheduleDates: scheduleDates ? new Date(scheduleDates) : undefined,
+                leadID,
+                templateID,
+                companyID,
+                userID
+            }
+        });
+
+        res.status(201).json(contactLog);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al crear el log de contacto" });
+    }
+});
+
+
 export default router;
