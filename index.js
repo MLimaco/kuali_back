@@ -1,4 +1,6 @@
 import express from 'express';
+import cors from 'cors'; // <--- Importa cors aquí
+
 import leadsRouter from './routes/leadRoutes.js';
 import companyRouter from './routes/companyRoutes.js';
 import contactLogRouter from './routes/contactLogRoutes.js';
@@ -10,6 +12,10 @@ import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const prisma = new PrismaClient();
+// Middleware para habilitar CORS
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
