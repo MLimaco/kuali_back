@@ -13,6 +13,19 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Nueva ruta: logs de un lead específico
+router.get("/:id/logs", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const logs = await prisma.contactLog.findMany({
+            where: { leadID: Number(id) }
+        });
+        res.json(logs);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener los logs del lead" });
+    }
+});
+
 router.post("/", async (req, res) => {
     try {
         const {
