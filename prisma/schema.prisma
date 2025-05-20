@@ -7,7 +7,7 @@
 // Define el generador del cliente Prisma (para usar en Node.js)
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 // Fuente de datos: usualmente PostgreSQL, usa DATABASE_URL desde .env
@@ -16,7 +16,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 // -------------------- MODELOS --------------------
 
@@ -27,7 +26,7 @@ model Company {
   size     String? // Tamaño de la empresa (opcional)
   website  String? // URL del sitio web (opcional)
   sector   String? // Sector de la empresa (opcional)
-  createAt DateTime @default(now()) // Fecha de creación del registro
+  createAt DateTime  @default(now()) // Fecha de creación del registro
   updateAt DateTime? // Fecha de actualización del registro
   deleteAt DateTime? // Fecha de eliminación lógica (opcional)
 
@@ -43,8 +42,9 @@ model User {
   email String // Email del usuario
   phone String? // Teléfono (opcional)
 
-  leads       Lead[]       @relation("LeadOwner") // Relación con leads donde es dueño
-  contactLogs ContactLog[] @relation("UserContactLogs") // Relación con logs de contacto
+  leads               Lead[]              @relation("LeadOwner") // Relación con leads donde es dueño
+  contactLogs         ContactLog[]        @relation("UserContactLogs") // Relación con logs de contacto
+  contactLogHistories ContactLogHistory[] // Relación con historial de logs de contacto
 
   @@map("user") // Mapea este modelo a la tabla "leads" dentro del schema "kuali_api"
 }
@@ -55,11 +55,9 @@ model Template {
   subject  String // Asunto del mensaje
   content  String // Contenido del mensaje (SALUDO, DESPEDIDA, FOLLOW UP, PROPUESTA, ETC)
   type     String // Tipo (CHAT, EMAIL, LLAMADA, MEET, ETC.)
-  createAt DateTime @default(now()) // Fecha de creación
+  createAt DateTime  @default(now()) // Fecha de creación
   updateAt DateTime? // Fecha de actualización
   deleteAt DateTime? // Fecha de eliminación lógica (opcional)
-
-  contactLogs ContactLog[] // Relación uno a muchos con logs
 
   @@map("template") // Mapea este modelo a la tabla "leads" dentro del schema "kuali_api"
 }
@@ -74,7 +72,7 @@ model Lead {
   rol             String? // Rol en la empresa
   senority        String? // Nivel de antigüedad
   area            String? // Área de trabajo
-  createAt        DateTime @default(now()) // Fecha de creación
+  createAt        DateTime  @default(now()) // Fecha de creación
   updateAt        DateTime? // Fecha de actualización
   deleteAt        DateTime? // Fecha de eliminación lógica
   nextStep        String? // Próximo paso a dar
@@ -92,24 +90,36 @@ model Lead {
 }
 
 model ContactLog {
-  id            Int       @id @default(autoincrement()) // Clave primaria
-  type          String // Tipo de Contacto (CHAT, EMAIL, LLAMADA, MEET, ETC.)
-  status        String // Estado del contacto (SEND, PENDING, ETC.)
-  notes         String? // Notas adicionales
-  scheduleDates DateTime? // Fecha programada para seguimiento
-  createAt      DateTime @default(now()) // Fecha de creación
-  updateAt      DateTime? // Fecha de modificación
-  deleteAt      DateTime? // Eliminación lógica
+  id        Int      @id @default(autoincrement()) // Clave primaria
+  type      String // Tipo de Contacto (CHAT, EMAIL, LLAMADA, MEET, ETC.)
+  status    String // Estado del contacto (SEND, PENDING, ETC.)
+  notes     String? // Notas adicionales
+  createAt  DateTime @default(now()) // Fecha de creación
+  updatedAt DateTime @updatedAt // <-- Nuevo campo
 
-  leadID     Int // FK a Lead
-  templateID Int? // FK opcional a Template usado
-  companyID  Int // FK a Company
-  userID     Int // FK a User (quien realizó el contacto)
+  leadID    Int // FK a Lead
+  companyID Int // FK a Company
+  userID    Int // FK a User (quien realizó el contacto)
 
-  lead     Lead      @relation(fields: [leadID], references: [id]) // Relación con el lead
-  template Template? @relation(fields: [templateID], references: [id]) // Relación con el template
-  company  Company   @relation("CompanyContactLogs", fields: [companyID], references: [id])
-  user     User      @relation("UserContactLogs", fields: [userID], references: [id])
+  lead    Lead    @relation(fields: [leadID], references: [id])
+  company Company @relation("CompanyContactLogs", fields: [companyID], references: [id])
+  user    User    @relation("UserContactLogs", fields: [userID], references: [id])
 
-  @@map("contact_log") // Mapea este modelo a la tabla "leads" dentro del schema "kuali_api"
+  histories ContactLogHistory[] // Relación con historial
+
+  @@map("contact_log")
+}
+
+model ContactLogHistory {
+  id           Int      @id @default(autoincrement())
+  contactLogID Int
+  status       String
+  notes        String?
+  userID       Int
+  changedAt    DateTime @default(now())
+
+  contactLog ContactLog @relation(fields: [contactLogID], references: [id])
+  user       User       @relation(fields: [userID], references: [id])
+
+  @@map("contact_log_history") // <-- Esto mapea el modelo a la tabla con ese nombre
 }
