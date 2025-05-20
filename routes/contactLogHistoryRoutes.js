@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 // Obtener historial de un log específico
-router.get("/log/:contactLogID", async (req, res) => {
+router.get("/:contactLogID", async (req, res) => {
     try {
         const { contactLogID } = req.params;
         const history = await prisma.contactLogHistory.findMany({
