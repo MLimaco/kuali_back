@@ -6,6 +6,7 @@ import companyRouter from './routes/companyRoutes.js';
 import contactLogRouter from './routes/contactLogRoutes.js';
 import templateRouter from './routes/templateRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import contactLogHistoryRouter from './routes/contactLogHistoryRoutes.js';
 
 import { PrismaClient } from '@prisma/client';
 
@@ -29,5 +30,6 @@ app.use('/api/companies', companyRouter);
 app.use('/api/logs', contactLogRouter);
 app.use('/api/templates', templateRouter);
 app.use('/api/users', userRouter);
+app.use('/api/logsHistory', contactLogHistoryRouter);
 
 app.listen(3000, () => console.log('Server is running on port 3000'));
